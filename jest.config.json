@@ -1,0 +1,11 @@
+{
+  "testEnvironment": "node",
+  "roots": [
+    "<rootDir>/src/",
+    "<rootDir>/test/"
+  ],
+  "testRegex": ".(spec|test|e2e-spec|e2e-test).ts$",
+  "transform": {
+    "^.+\\.ts$": "ts-jest"
+  }
+}

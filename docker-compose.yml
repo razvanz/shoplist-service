@@ -1,0 +1,13 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: shoplist
+      POSTGRES_PASSWORD: shoplist
+
+  shoplist:
+    build: .
+    ports:
+      - "3000:3000"
