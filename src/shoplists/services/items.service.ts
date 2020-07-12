@@ -8,7 +8,7 @@ import {
   ItemUpdateDto
 } from '../interfaces/items.dto'
 
-export class ItemService {
+export class ItemsService {
   constructor (
     @InjectRepository(Item) private readonly itemRepository: Repository<Item>
   ) {}

@@ -1,6 +1,6 @@
 import { Inject, Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
-import { ItemService } from '../services/items.service'
+import { ItemsService } from '../services/items.service'
 import {
   ItemDto,
   ItemCreateDto,
@@ -10,14 +10,14 @@ import {
 @Controller('/shoplists/:shoplistId/items')
 export class ItemsController {
   constructor (
-    @Inject(ItemService) private readonly itemService: ItemService
+    @Inject(ItemsService) private readonly itemsService: ItemsService
   ) {}
 
   @Get()
   async list (
     @Param('shoplistId') shoplistId: string
   ): Promise<Array<ItemDto>> {
-    return this.itemService.listItems({ shoplistId })
+    return this.itemsService.listItems({ shoplistId })
   }
 
   @Post()
@@ -25,7 +25,7 @@ export class ItemsController {
     @Param('shoplistId') shoplistId: string,
     @Body() payload: ItemCreateDto
   ): Promise<ItemDto> {
-    return this.itemService.upsertItem({ ...payload, shoplistId, id: uuid() })
+    return this.itemsService.upsertItem({ ...payload, shoplistId, id: uuid() })
   }
 
   @Get(':itemId')
@@ -33,7 +33,7 @@ export class ItemsController {
     @Param('shoplistId') shoplistId: string,
     @Param('itemId') itemId: string
   ): Promise<ItemDto> {
-    const [item] = await this.itemService.listItems({ shoplistId, id: itemId })
+    const [item] = await this.itemsService.listItems({ shoplistId, id: itemId })
 
     return item
   }
@@ -44,7 +44,7 @@ export class ItemsController {
     @Param('itemId') itemId: string,
     @Body() payload: ItemUpdateDto
   ): Promise<ItemDto> {
-    return this.itemService.upsertItem({ ...payload, shoplistId, id: itemId })
+    return this.itemsService.upsertItem({ ...payload, shoplistId, id: itemId })
   }
 
   @Delete(':itemId')
@@ -52,6 +52,6 @@ export class ItemsController {
     @Param('shoplistId') shoplistId: string,
     @Param('itemId') itemId: string
   ): Promise<void> {
-    return this.itemService.deleteItems({ shoplistId, id: itemId })
+    return this.itemsService.deleteItems({ shoplistId, id: itemId })
   }
 }

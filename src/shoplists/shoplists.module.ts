@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Item } from './entities/item.entity'
 import { Shoplist } from './entities/shoplist.entity'
-import { ItemService } from './services/items.service'
-import { ShoplistService } from './services/shoplists.service'
+import { ItemsService } from './services/items.service'
+import { ShoplistsService } from './services/shoplists.service'
 import { ItemsController } from './controllers/items.controller'
 import { ShoplistsController } from './controllers/shoplists.controller'
 
@@ -15,8 +15,8 @@ import { ShoplistsController } from './controllers/shoplists.controller'
     ])
   ],
   providers: [
-    ShoplistService,
-    ItemService
+    ShoplistsService,
+    ItemsService
   ],
   controllers: [
     ShoplistsController,

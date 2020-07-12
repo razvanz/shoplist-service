@@ -1,6 +1,6 @@
 import { Inject, Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
-import { ShoplistService } from '../services/shoplists.service'
+import { ShoplistsService } from '../services/shoplists.service'
 import {
   ShoplistDto,
   ShoplistUpsertDto
@@ -9,12 +9,12 @@ import {
 @Controller('/shoplists')
 export class ShoplistsController {
   constructor (
-    @Inject(ShoplistService) private readonly shoplistService: ShoplistService
+    @Inject(ShoplistsService) private readonly shoplistsService: ShoplistsService
   ) {}
 
   @Get()
   async list (): Promise<Array<ShoplistDto>> {
-    return this.shoplistService.listShoplists({
+    return this.shoplistsService.listShoplists({
       ownerId: 'default_user'
     })
   }
@@ -23,7 +23,7 @@ export class ShoplistsController {
   async create (
     @Body() payload: ShoplistUpsertDto
   ): Promise<ShoplistDto> {
-    return this.shoplistService.upsertShoplist({
+    return this.shoplistsService.upsertShoplist({
       ...payload,
       id: uuid(),
       ownerId: 'default_user'
@@ -34,7 +34,7 @@ export class ShoplistsController {
   async get (
     @Param('shoplistId') shoplistId: string
   ): Promise<ShoplistDto> {
-    const [list] = await this.shoplistService.listShoplists({
+    const [list] = await this.shoplistsService.listShoplists({
       id: shoplistId,
       ownerId: 'default_user'
     })
@@ -47,7 +47,7 @@ export class ShoplistsController {
     @Param('shoplistId') shoplistId: string,
     @Body() payload: ShoplistUpsertDto
   ): Promise<ShoplistDto> {
-    return this.shoplistService.upsertShoplist({
+    return this.shoplistsService.upsertShoplist({
       ...payload,
       id: shoplistId,
       ownerId: 'default_user'
@@ -58,7 +58,7 @@ export class ShoplistsController {
   async delete (
     @Param('shoplistId') shoplistId: string
   ): Promise<void> {
-    return this.shoplistService.deleteShoplists({
+    return this.shoplistsService.deleteShoplists({
       id: shoplistId,
       ownerId: 'default_user'
     })

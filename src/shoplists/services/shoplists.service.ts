@@ -7,12 +7,12 @@ import {
   ShoplistQueryDto,
   ShoplistUpsertDto
 } from '../interfaces/shoplists.dto'
-import { ItemService } from './items.service'
+import { ItemsService } from './items.service'
 
-export class ShoplistService {
+export class ShoplistsService {
   constructor (
     @InjectRepository(Shoplist) private readonly shoplistRepository: Repository<Shoplist>,
-    @Inject(ItemService) private readonly itemService: ItemService
+    @Inject(ItemsService) private readonly itemsService: ItemsService
   ) {}
 
   async listShoplists (query?: ShoplistQueryDto): Promise<Array<Shoplist>> {
@@ -24,11 +24,11 @@ export class ShoplistService {
 
   async upsertShoplist (shoplistDto: ShoplistUpsertDto): Promise<Shoplist> {
     // if (shoplistDto.id) {
-    //   await this.itemService.deleteItems({ shoplist: { id: shoplistDto.id } })
+    //   await this.itemsService.deleteItems({ shoplist: { id: shoplistDto.id } })
     // }
 
     const items = await Promise.all(
-      (shoplistDto.items || []).map(item => this.itemService.upsertItem(item))
+      (shoplistDto.items || []).map(item => this.itemsService.upsertItem(item))
     )
 
     return await this.shoplistRepository.save({ ...shoplistDto, items })
@@ -40,7 +40,7 @@ export class ShoplistService {
     if (!lists) return
 
     await Promise.all([
-      this.itemService.deleteItems(_.flatMap(lists, list => list.items.map(item => item.id))),
+      this.itemsService.deleteItems(_.flatMap(lists, list => list.items.map(item => item.id))),
       this.shoplistRepository.delete(lists.map(list => list.id))
     ])
   }
