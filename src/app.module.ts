@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { AppController } from './app.controller'
 import initConfig from './config'
+import { AppController } from './app.controller'
+import { ShoplistsModule } from './shoplists/shoplists.module'
 
 @Module({
   imports: [
@@ -22,9 +23,13 @@ import initConfig from './config'
         username: configService.get('database.username'),
         password: configService.get('database.password'),
         database: configService.get('database.schema'),
+        entities: [
+          'dist/**/*.entity.js'
+        ],
         synchronize: true
       })
-    })
+    }),
+    ShoplistsModule
   ],
   controllers: [AppController],
   providers: []
