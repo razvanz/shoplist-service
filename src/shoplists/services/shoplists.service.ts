@@ -37,11 +37,12 @@ export class ShoplistsService {
 
   async deleteShoplists (query: ShoplistQueryDto): Promise<void> {
     const lists = await this.listShoplists(query)
+    const itemIds = _.flatMap(lists, list => list.items.map(item => item.id))
 
     if (!lists) return
 
     await Promise.all([
-      this.itemsService.deleteItems(_.flatMap(lists, list => list.items.map(item => item.id))),
+      itemIds ? this.itemsService.deleteItems(itemIds) : Promise.resolve(),
       this.shoplistRepository.delete(lists.map(list => list.id))
     ])
   }

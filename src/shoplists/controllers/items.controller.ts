@@ -3,9 +3,16 @@ import {
   Inject,
   Controller,
   Get, Post, Put, Delete,
+  HttpCode,
   Param, Body,
   UseGuards, SetMetadata
 } from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger'
 import { UserRole } from '../../users/entities/user.entity'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { RolesGuard } from '../guards/roles.guard'
@@ -17,6 +24,16 @@ import {
   ItemUpdateDto
 } from '../interfaces/items.dto'
 
+@ApiBearerAuth()
+@ApiTags('items')
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized'
+})
+@ApiResponse({
+  status: 404,
+  description: 'Shoplist not found'
+})
 @Controller('/shoplists/:shoplistId/items')
 @UseGuards(JwtAuthGuard, RolesGuard, ShoplistOwnershipGuard)
 export class ItemsController {
@@ -25,6 +42,12 @@ export class ItemsController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'List shoplist items' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retrieves a list of shoplist items',
+    type: [ItemDto]
+  })
   @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
   async list (
     @Param('shoplistId') shoplistId: string
@@ -33,6 +56,12 @@ export class ItemsController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create a new shoplist item' })
+  @ApiResponse({
+    status: 201,
+    description: 'Retrieves a list of shoplist items',
+    type: ItemDto
+  })
   @SetMetadata('roles', [UserRole.Client])
   async create (
     @Param('shoplistId') shoplistId: string,
@@ -42,6 +71,16 @@ export class ItemsController {
   }
 
   @Get(':itemId')
+  @ApiOperation({ summary: 'Fetch a shoplist item' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the requested shoplist item',
+    type: ItemDto
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Item not found'
+  })
   @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
   async get (
     @Param('shoplistId') shoplistId: string,
@@ -56,6 +95,16 @@ export class ItemsController {
   }
 
   @Put(':itemId')
+  @ApiOperation({ summary: 'Update a shoplist item' })
+  @ApiResponse({
+    status: 200,
+    description: 'Updates the shoplist item and returns it',
+    type: ItemDto
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Item not found'
+  })
   @SetMetadata('roles', [UserRole.Client])
   async update (
     @Param('shoplistId') shoplistId: string,
@@ -66,6 +115,16 @@ export class ItemsController {
   }
 
   @Delete(':itemId')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete a shoplist item' })
+  @ApiResponse({
+    status: 204,
+    description: 'Deletes the shoplist item'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Item not found'
+  })
   @SetMetadata('roles', [UserRole.Client])
   async delete (
     @Param('shoplistId') shoplistId: string,

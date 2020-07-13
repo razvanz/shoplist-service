@@ -1,6 +1,6 @@
 # shoplist-service
 
-A service providing functionality for creating and managing and sharing shopping lists and their items through a REST API.
+A service providing functionality for managing and sharing shopping lists and their items through a REST API.
 
 ## Requirements
 
@@ -16,8 +16,12 @@ The service can be configured using the following environment variables:
 
 Name | Required | Default | Description
 ---- | -------- | ------- | -----------
-`DB_URL` | `false` | `postgres://shoplist:shoplist@localhost:5432/shoplist` | DB connection URL
 `LOG_LEVEL` | `false` | `info` | Level below which log records will be suppressed
+`DB_URL` | `false` | `postgres://shoplist:shoplist@localhost:5432/shoplist` | DB connection URL
+
+## API documentation
+
+The service exposes a Swagger UI. Simply run the service and navigate to the `/docs` path.
 
 ## Production
 
