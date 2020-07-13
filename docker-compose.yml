@@ -9,5 +9,7 @@ services:
 
   shoplist:
     build: .
+    environment:
+      DB_URL: "postgres://shoplist:shoplist@postgres:5432/shoplist"
     ports:
       - "3000:3000"
