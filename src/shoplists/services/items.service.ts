@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Item } from '../entities/item.entity'
@@ -8,6 +9,7 @@ import {
   ItemUpdateDto
 } from '../interfaces/items.dto'
 
+@Injectable()
 export class ItemsService {
   constructor (
     @InjectRepository(Item) private readonly itemRepository: Repository<Item>

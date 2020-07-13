@@ -1,5 +1,15 @@
-import { Inject, Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
+import {
+  Inject,
+  Controller,
+  Get, Post, Put, Delete,
+  Param, Body,
+  UseGuards, SetMetadata
+} from '@nestjs/common'
+import { UserRole } from '../../users/entities/user.entity'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
+import { RolesGuard } from '../guards/roles.guard'
+import { ShoplistOwnershipGuard } from '../guards/shoplist-ownership.guard'
 import { ItemsService } from '../services/items.service'
 import {
   ItemDto,
@@ -8,12 +18,14 @@ import {
 } from '../interfaces/items.dto'
 
 @Controller('/shoplists/:shoplistId/items')
+@UseGuards(JwtAuthGuard, RolesGuard, ShoplistOwnershipGuard)
 export class ItemsController {
   constructor (
     @Inject(ItemsService) private readonly itemsService: ItemsService
   ) {}
 
   @Get()
+  @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
   async list (
     @Param('shoplistId') shoplistId: string
   ): Promise<Array<ItemDto>> {
@@ -21,6 +33,7 @@ export class ItemsController {
   }
 
   @Post()
+  @SetMetadata('roles', [UserRole.Client])
   async create (
     @Param('shoplistId') shoplistId: string,
     @Body() payload: ItemCreateDto
@@ -29,16 +42,21 @@ export class ItemsController {
   }
 
   @Get(':itemId')
+  @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
   async get (
     @Param('shoplistId') shoplistId: string,
     @Param('itemId') itemId: string
   ): Promise<ItemDto> {
-    const [item] = await this.itemsService.listItems({ shoplistId, id: itemId })
+    const [item] = await this.itemsService.listItems({
+      shoplistId,
+      id: itemId
+    })
 
     return item
   }
 
   @Put(':itemId')
+  @SetMetadata('roles', [UserRole.Client])
   async update (
     @Param('shoplistId') shoplistId: string,
     @Param('itemId') itemId: string,
@@ -48,6 +66,7 @@ export class ItemsController {
   }
 
   @Delete(':itemId')
+  @SetMetadata('roles', [UserRole.Client])
   async delete (
     @Param('shoplistId') shoplistId: string,
     @Param('itemId') itemId: string

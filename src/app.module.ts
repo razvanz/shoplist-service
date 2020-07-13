@@ -4,6 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import initConfig from './config'
 import { AppController } from './app.controller'
 import { ShoplistsModule } from './shoplists/shoplists.module'
+import { AuthModule } from './auth/auth.module'
+
+import { User } from './users/entities/user.entity'
+import { Item } from './shoplists/entities/item.entity'
+import { Shoplist } from './shoplists/entities/shoplist.entity'
 
 @Module({
   imports: [
@@ -24,11 +29,15 @@ import { ShoplistsModule } from './shoplists/shoplists.module'
         password: configService.get('database.password'),
         database: configService.get('database.schema'),
         entities: [
-          'dist/**/*.entity.js'
+          // 'dist/**/*.entity.js'
+          User,
+          Item,
+          Shoplist
         ],
         synchronize: true
       })
     }),
+    AuthModule,
     ShoplistsModule
   ],
   controllers: [AppController],

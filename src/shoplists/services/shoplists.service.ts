@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import _ from 'lodash'
 import { Repository } from 'typeorm'
@@ -9,6 +9,7 @@ import {
 } from '../interfaces/shoplists.dto'
 import { ItemsService } from './items.service'
 
+@Injectable()
 export class ShoplistsService {
   constructor (
     @InjectRepository(Shoplist) private readonly shoplistRepository: Repository<Shoplist>,

@@ -1,66 +1,92 @@
-import { Inject, Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common'
 import { v4 as uuid } from 'uuid'
+import {
+  Inject,
+  Controller,
+  Get, Post, Put, Delete,
+  Param, Body,
+  UseGuards, SetMetadata
+} from '@nestjs/common'
+import { UserRole } from '../../users/entities/user.entity'
+import { User } from '../decorators/user.decorator'
+import { JwtAuthGuard } from '../guards/jwt-auth.guard'
+import { RolesGuard } from '../guards/roles.guard'
 import { ShoplistsService } from '../services/shoplists.service'
+import {
+  UserDto
+} from '../../users/interfaces/users.dto'
 import {
   ShoplistDto,
   ShoplistUpsertDto
 } from '../interfaces/shoplists.dto'
 
 @Controller('/shoplists')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ShoplistsController {
   constructor (
     @Inject(ShoplistsService) private readonly shoplistsService: ShoplistsService
   ) {}
 
   @Get()
-  async list (): Promise<Array<ShoplistDto>> {
-    return this.shoplistsService.listShoplists({
-      ownerId: 'default_user'
-    })
+  @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
+  async list (
+    @User() user: UserDto
+  ): Promise<Array<ShoplistDto>> {
+    return this.shoplistsService.listShoplists(
+      // For clients, limit shoplists to what they own
+      user.role === UserRole.Client ? { ownerId: user.id } : {}
+    )
   }
 
   @Post()
+  @SetMetadata('roles', [UserRole.Client])
   async create (
+    @User() user: UserDto,
     @Body() payload: ShoplistUpsertDto
   ): Promise<ShoplistDto> {
     return this.shoplistsService.upsertShoplist({
       ...payload,
       id: uuid(),
-      ownerId: 'default_user'
+      ownerId: user.id
     })
   }
 
   @Get(':shoplistId')
+  @SetMetadata('roles', [UserRole.Client, UserRole.Buyer])
   async get (
+    @User() user: UserDto,
     @Param('shoplistId') shoplistId: string
   ): Promise<ShoplistDto> {
     const [list] = await this.shoplistsService.listShoplists({
       id: shoplistId,
-      ownerId: 'default_user'
+      ...(user.role === UserRole.Client ? { ownerId: user.id } : {})
     })
 
     return list
   }
 
   @Put(':shoplistId')
+  @SetMetadata('roles', [UserRole.Client])
   async update (
+    @User() user: UserDto,
     @Param('shoplistId') shoplistId: string,
     @Body() payload: ShoplistUpsertDto
   ): Promise<ShoplistDto> {
     return this.shoplistsService.upsertShoplist({
       ...payload,
       id: shoplistId,
-      ownerId: 'default_user'
+      ownerId: user.id
     })
   }
 
   @Delete(':shoplistId')
+  @SetMetadata('roles', [UserRole.Client])
   async delete (
+    @User() user: UserDto,
     @Param('shoplistId') shoplistId: string
   ): Promise<void> {
     return this.shoplistsService.deleteShoplists({
       id: shoplistId,
-      ownerId: 'default_user'
+      ownerId: user.id
     })
   }
 }
