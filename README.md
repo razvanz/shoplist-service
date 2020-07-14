@@ -16,12 +16,14 @@ The service can be configured using the following environment variables:
 
 Name | Required | Default | Description
 ---- | -------- | ------- | -----------
-`LOG_LEVEL` | `false` | `info` | Level below which log records will be suppressed
+`PORT` | `false` | `3000` | Port at which the server will be listening for HTTP requests
 `DB_URL` | `false` | `postgres://shoplist:shoplist@localhost:5432/shoplist` | DB connection URL
 
 ## API documentation
 
 The service exposes a Swagger UI. Simply run the service and navigate to the `/docs` path.
+
+*Assuming the service is run with the default configuration, the API docs URL will be [http://localhost:3000/docs](http://localhost:3000/docs).*
 
 ## Production
 
