@@ -24,15 +24,7 @@ export class ShoplistsService {
   }
 
   async upsertShoplist (shoplistDto: ShoplistUpsertDto): Promise<Shoplist> {
-    // if (shoplistDto.id) {
-    //   await this.itemsService.deleteItems({ shoplist: { id: shoplistDto.id } })
-    // }
-
-    const items = await Promise.all(
-      (shoplistDto.items || []).map(item => this.itemsService.upsertItem(item))
-    )
-
-    return await this.shoplistRepository.save({ ...shoplistDto, items })
+    return await this.shoplistRepository.save({ ...shoplistDto })
   }
 
   async deleteShoplists (query: ShoplistQueryDto): Promise<void> {

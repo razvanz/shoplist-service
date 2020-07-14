@@ -17,6 +17,7 @@ import { UserRole } from '../../users/entities/user.entity'
 import { User } from '../decorators/user.decorator'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { RolesGuard } from '../guards/roles.guard'
+import { ShoplistOwnershipGuard } from '../guards/shoplist-ownership.guard'
 import { ShoplistsService } from '../services/shoplists.service'
 import {
   UserDto
@@ -76,6 +77,7 @@ export class ShoplistsController {
   }
 
   @Get(':shoplistId')
+  @UseGuards(ShoplistOwnershipGuard)
   @ApiOperation({ summary: 'Retrieve a shoplist' })
   @ApiResponse({
     status: 200,
@@ -100,6 +102,7 @@ export class ShoplistsController {
   }
 
   @Put(':shoplistId')
+  @UseGuards(ShoplistOwnershipGuard)
   @ApiOperation({ summary: 'Update a shoplist' })
   @ApiResponse({
     status: 200,
@@ -124,6 +127,7 @@ export class ShoplistsController {
   }
 
   @Delete(':shoplistId')
+  @UseGuards(ShoplistOwnershipGuard)
   @HttpCode(204)
   @ApiOperation({ summary: 'Delete a shoplist' })
   @ApiResponse({

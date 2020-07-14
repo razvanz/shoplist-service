@@ -60,7 +60,7 @@ export class ShoplistUpsertDto {
   readonly name: string;
 
   @IsString()
-  readonly ownerId: string;
+  readonly ownerId?: string;
 
   @ValidateNested()
   readonly items?: ItemDto[];

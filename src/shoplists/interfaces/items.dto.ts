@@ -40,7 +40,7 @@ export class ItemQueryDto {
 
 export class ItemCreateDto {
   @IsString()
-  readonly id: string;
+  readonly id?: string;
 
   @ApiProperty({
     description: 'The name of the item'
@@ -54,7 +54,7 @@ export class ItemCreateDto {
 
 export class ItemUpdateDto {
   @IsString()
-  readonly id: string;
+  readonly id?: string;
 
   @ApiProperty({
     description: 'The name of the item'
